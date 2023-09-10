@@ -14,7 +14,7 @@ pipeline {
                 environment {
                     DOCKER_IMAGE = "thakur156/node-app-test:${BUILD_NUMBER}"
                 }
-                sh "docker build -t ${DOCKER_IMAGE} ."
+                sh "docker build . -t ${DOCKER_IMAGE} "
             }
         }
         
