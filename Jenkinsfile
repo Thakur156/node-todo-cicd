@@ -14,6 +14,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                sh 'echo passed'
                 // Checkout your code from your version control system (e.g., Git)
                 // Example for Git:
                 // checkout scm
