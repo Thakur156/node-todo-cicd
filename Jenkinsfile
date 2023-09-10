@@ -14,14 +14,16 @@ pipeline {
             }
         }
         stage("Push to DockerHub"){
+            environment {
+        REGISTRY_CREDENTIALS = credentials('docker-cred')
+      }
             steps{
-                withCredentials([usernamePassword(credentialsId:"docker-cred",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
-                    sh "docker login -u ${env.dockerHubUser} -password-stdin ${env.dockerHubPass}"
-                    sh "docker tag node-app-test-new ${env.dockerHubUser}/node-app-test-new:latest"
-                    sh "docker push ${env.dockerHubUser}/node-app-test-new:latest" 
+                docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
+                sh "docker tag node-app-test-new thakur156/node-app-test-new:latest"
+                    sh "docker push thakur156/node-app-test-new:latest" 
+            }
                 }
             }
-        }
         stage("Deploy"){
             steps{
                 sh "docker-compose down && docker-compose up -d"
