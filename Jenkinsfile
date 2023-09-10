@@ -1,6 +1,10 @@
 pipeline {
     agent any
     
+    environment {
+        DOCKER_IMAGE = "" // Define DOCKER_IMAGE at the top level
+    }
+    
     stages {
         stage("Code") {
             steps {
@@ -12,7 +16,7 @@ pipeline {
         stage("Build & Test") {
             steps {
                 script {
-                    def DOCKER_IMAGE = "thakur156/node-app-test:${BUILD_NUMBER}"
+                    DOCKER_IMAGE = "thakur156/node-app-test:${BUILD_NUMBER}"
                     sh "docker build -t ${DOCKER_IMAGE} ."
                 }
             }
