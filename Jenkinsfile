@@ -10,7 +10,10 @@ pipeline {
         }
         stage("Build & Test"){
             steps{
-                sh "docker build . -t node-app-test-new"
+                 environment {
+        DOCKER_IMAGE = "thakur156/node-app-test:${BUILD_NUMBER}"
+      }
+                sh 'docker build -t ${DOCKER_IMAGE} . '
             }
         }
         stage("Push to DockerHub"){
@@ -18,10 +21,12 @@ pipeline {
         REGISTRY_CREDENTIALS = credentials('docker-cred')
       }
             steps{
+                script{
+                def dockerImage = docker.image("${DOCKER_IMAGE}")
                 docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
-                sh "docker tag node-app-test-new thakur156/node-app-test-new:latest"
-                    sh "docker push thakur156/node-app-test-new:latest" 
+                    dockerImage.push()
             }
+                }
                 }
             }
         stage("Deploy"){
